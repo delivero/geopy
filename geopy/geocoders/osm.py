@@ -289,7 +289,7 @@ class Nominatim(Geocoder):
             if isinstance(osm_ids, string_compare):
                 params['osm_ids'] = [osm_ids]
             else:
-                if not (isinstance(osm_ids, list) or isinstance(osm_ids, set)):
+                if not (isinstance(osm_ids, (list, set))):
                     raise ValueError(
                         "osm_ids must be a string expression or "
                         "a set/list of string expressions"
