@@ -73,3 +73,13 @@ class GeocoderNotFound(GeopyError):
     Caller requested the geocoder matching a string, e.g.,
     "google" > GoogleV3, but no geocoder could be found.
     """
+
+class GeocoderDeniedError(GeocoderQueryError):
+    """
+    Caller requested the endpoint probably with invalid api key
+    """
+
+class GeocoderInvalidError(GeocoderQueryError):
+    """
+    Caller requested the endpoint with an invalid set of parameters or values
+    """

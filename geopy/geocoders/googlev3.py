@@ -8,11 +8,12 @@ import hmac
 from geopy.compat import urlencode
 from geopy.geocoders.base import Geocoder, DEFAULT_TIMEOUT, DEFAULT_SCHEME
 from geopy.exc import (
-    GeocoderQueryError,
     GeocoderQuotaExceeded,
     ConfigurationError,
     GeocoderParseError,
     GeocoderQueryError,
+    GeocoderDeniedError,
+    GeocoderInvalidError
 )
 from geopy.location import Location
 from geopy.util import logger
@@ -368,11 +369,11 @@ class GoogleV3(Geocoder):  # pylint: disable=R0902
                 ' short a period of time.'
             )
         elif status == 'REQUEST_DENIED':
-            raise GeocoderQueryError(
+            raise GeocoderDeniedError(
                 'Your request was denied.'
             )
         elif status == 'INVALID_REQUEST':
-            raise GeocoderQueryError('Probably missing address or latlng.')
+            raise GeocoderInvalidError('Probably missing address or latlng.')
         else:
             raise GeocoderQueryError('Unknown error.')
 
