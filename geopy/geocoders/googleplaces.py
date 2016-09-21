@@ -12,7 +12,7 @@ from geopy.exc import (
     GeocoderQueryError,
 )
 from geopy.location import Location
-
+from geopy.geocoders.googlev3 import GoogleV3
 
 __all__ = ("GooglePlaces", )
 
@@ -168,7 +168,7 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
     def parse_details(self, details_page):
         status = details_page.get('status')
         if status != "OK":
-            self._check_status(status)
+            GoogleV3._check_status(status)
             return None
         return details_page.get('result')
 
@@ -239,28 +239,6 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
     def parse_autocomplete(self, autocomplete_page):
         predictions = autocomplete_page.get('predictions', [])
         if not len(predictions):
-            self._check_status(autocomplete_page.get('status'))
+            GoogleV3._check_status(autocomplete_page.get('status'))
         return predictions
 
-    @staticmethod
-    def _check_status(status):
-        """
-        Validates error statuses.
-        """
-        if status == 'ZERO_RESULTS':
-            # When there are no results, just return.
-            return
-        if status == 'OVER_QUERY_LIMIT':
-            raise GeocoderQuotaExceeded(
-                'The given key has gone over the requests limit in the 24'
-                ' hour period or has submitted too many requests in too'
-                ' short a period of time.'
-            )
-        elif status == 'REQUEST_DENIED':
-            raise GeocoderQueryError(
-                'Your request was denied.'
-            )
-        elif status == 'INVALID_REQUEST':
-            raise GeocoderQueryError('Probably wrong or missing address')
-        else:
-            raise GeocoderQueryError('Unknown error.')

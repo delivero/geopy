@@ -16,7 +16,7 @@ except ImportError: # pragma: no cover
     pass
 
 
-__version__ = "1.12.3"
+__version__ = "1.12.4"
 
 
 class NullHandler(logging.Handler):
