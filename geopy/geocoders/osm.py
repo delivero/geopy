@@ -259,7 +259,8 @@ class Nominatim(Geocoder):
         """
         Returns address of one or multiple OSM objects.
 
-        :param osm_ids: An individual or a list of osm_ids to lookup
+        :param osm_ids: An individual or a list of osm_ids to lookup. Each
+            osm_id consists of OSM_TYPE (such as W, N) and an OSM_ID (integer)
 
         :param int timeout: Time, in seconds, to wait for the geocoding service
             to respond before raising a :class:`geopy.exc.GeocoderTimedOut`
