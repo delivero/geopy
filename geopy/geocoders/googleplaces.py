@@ -226,7 +226,7 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
         if types is not None:
             autocomplete_params['types'] = types
 
-        if components is not None:
+        if components:
             autocomplete_params['components'] = self._format_components_param(components)
 
         if self.premier is False:
