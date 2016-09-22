@@ -249,13 +249,7 @@ class Nominatim(Geocoder):
             self._call_geocoder(url, timeout=timeout), exactly_one
         )
 
-    def lookup(
-            self,
-            osm_ids,
-            timeout=None,
-            addressdetails=False,
-            language=False
-    ):
+    def lookup(self, osm_ids, timeout=None, addressdetails=False, language=False):
         """
         Returns address of one or multiple OSM objects.
 
@@ -290,7 +284,7 @@ class Nominatim(Geocoder):
             if isinstance(osm_ids, string_compare):
                 params['osm_ids'] = [osm_ids]
             else:
-                if not (isinstance(osm_ids, (list, set))):
+                if not isinstance(osm_ids, (list, set)):
                     raise ValueError(
                         "osm_ids must be a string expression or "
                         "a set/list of string expressions"
