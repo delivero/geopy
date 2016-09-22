@@ -8,7 +8,7 @@ from geopy.geocoders.base import (
     DEFAULT_TIMEOUT,
     DEFAULT_SCHEME
 )
-from geopy.compat import urlencode
+from geopy.compat import urlencode, string_compare
 from geopy.location import Location
 from geopy.util import logger
 from geopy.exc import GeocoderQueryError
@@ -84,6 +84,7 @@ class Nominatim(Geocoder):
 
         self.api = "%s://%s/search" % (self.scheme, self.domain)
         self.reverse_api = "%s://%s/reverse" % (self.scheme, self.domain)
+        self.lookup_api = "%s://%s/lookup" % (self.scheme, self.domain)
 
     def geocode(
             self,
@@ -246,6 +247,53 @@ class Nominatim(Geocoder):
         logger.debug("%s.reverse: %s", self.__class__.__name__, url)
         return self._parse_json(
             self._call_geocoder(url, timeout=timeout), exactly_one
+        )
+
+    def lookup(self, osm_ids, timeout=None, addressdetails=False, language=False):
+        """
+        Returns address of one or multiple OSM objects.
+
+        :param osm_ids: An individual or a list of osm_ids to lookup. Each
+            osm_id consists of OSM_TYPE (such as W, N) and an OSM_ID (integer)
+
+        :param int timeout: Time, in seconds, to wait for the geocoding service
+            to respond before raising a :class:`geopy.exc.GeocoderTimedOut`
+            exception. Set this only if you wish to override, on this call
+            only, the value set during the geocoder's initialization.
+
+            .. versionadded:: 0.97
+
+        :param bool addressdetails: Include a breakdown of the address into
+            elements
+
+        :param string language: Preferred language in which to return results.
+            Either uses standard
+            `RFC2616 <http://www.ietf.org/rfc/rfc2616.txt>`_
+            accept-language string or a simple comma-separated
+            list of language codes.
+
+        """
+        params = {'format': 'json'}
+        if addressdetails:
+            params['addressdetails'] = 1
+
+        if language:
+            params['language'] = language
+
+        if osm_ids:
+            if isinstance(osm_ids, string_compare):
+                params['osm_ids'] = [osm_ids]
+            else:
+                if not isinstance(osm_ids, (list, set)):
+                    raise ValueError(
+                        "osm_ids must be a string expression or "
+                        "a set/list of string expressions"
+                    )
+                params['osm_ids'] = osm_ids
+        url = "?".join((self.lookup_api, urlencode(params, doseq=True)))
+        logger.debug("%s.geocode: %s", self.__class__.__name__, url)
+        return self._parse_json(
+            self._call_geocoder(url, timeout=timeout), exactly_one=False
         )
 
     @staticmethod

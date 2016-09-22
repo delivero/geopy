@@ -15,6 +15,17 @@ class NominatimTestCase(GeocoderTestBase): # pylint: disable=R0904,C0111
         cls.known_state_de = "Verwaltungsregion Ionische Inseln"
         cls.known_state_en = "Ionian Islands Periphery"
 
+    def test_lookup(self):
+        """
+        Nominatim.lookup
+        """
+        result = self.geocoder.lookup(osm_ids='N476294789', timeout=60,
+                                      language='de')
+        if result is None:
+            self.fail('No result found')
+        else:
+            self._verify_request(result, **{"latitude": 49.7371104, "longitude": 12.2335383})
+
     def test_geocode(self):
         """
         Nominatim.geocode
