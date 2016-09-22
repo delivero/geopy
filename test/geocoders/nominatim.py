@@ -24,8 +24,7 @@ class NominatimTestCase(GeocoderTestBase): # pylint: disable=R0904,C0111
         if result is None:
             self.fail('No result found')
         else:
-            self._verify_request(result, {"latitude": 49.7371104,
-                                          "longitude": 12.2335383})
+            self._verify_request(result, **{"latitude": 49.7371104, "longitude": 12.2335383})
 
     def test_geocode(self):
         """
