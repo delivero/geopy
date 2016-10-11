@@ -124,7 +124,7 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
                 location=None,
                 radius=None,
                 language=None,
-                types=None,
+                type=None,
                 components=None,
                 ):  # pylint: disable=W0221,R0913
         """
@@ -150,15 +150,15 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
 
         :param string language: The language in which to return results. List of supported languages: https://developers.google.com/maps/faq#languagesupport
 
-        :param string types: The types of place results to return.
-            Possible values are "geocode", "address", "establishment", "(regions)" or "(cities)"
+        :param string type: The type of place results to return.
+            Possible values are "geocode", "address", "(regions)" or "(cities)"
             If no type is specified, all types will be returned.
 
         :param dict components: A grouping of places to which you would like to restrict your results.
             Currently, you can use components to filter by country.
             For example: components=country:fr would restrict your results to places within France.
         """
-        autocomplete_predictions = self.autocomplete(query, timeout, location, radius, language, types, components)
+        autocomplete_predictions = self.autocomplete(query, timeout, location, radius, language, type, components)
 
         if len(autocomplete_predictions) > 1 and exactly_one:
             return self.place_details(autocomplete_predictions[0].get('place_id'), language)
@@ -201,7 +201,7 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
                      location=None,
                      radius=None,
                      language=None,
-                     types=None,
+                     type=None,
                      components=None):
 
         autocomplete_params = {
@@ -223,8 +223,8 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
         if language is not None:
             autocomplete_params['language'] = language
 
-        if types is not None:
-            autocomplete_params['types'] = types
+        if type is not None:
+            autocomplete_params['type'] = type
 
         if components:
             autocomplete_params['components'] = self._format_components_param(components)
