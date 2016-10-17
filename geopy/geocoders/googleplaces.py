@@ -167,6 +167,8 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
 
     def parse_details(self, details_page):
         status = details_page.get('status')
+        if status == "NOT_FOUND":
+            return None
         if status != "OK":
             GoogleV3._check_status(status)
             return None
@@ -188,10 +190,13 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
             details_url = self._get_signed_url('/maps/api/place/details/json', detail_params)
 
         detail_result = self.parse_details(self._call_geocoder(details_url, timeout=timeout))
-        formatted_address = detail_result['formatted_address']
-        latitude = detail_result['geometry']['location']['lat']
-        longitude = detail_result['geometry']['location']['lng']
-        return Location(formatted_address, (latitude, longitude), detail_result)
+        if detail_result:
+            formatted_address = detail_result['formatted_address']
+            latitude = detail_result['geometry']['location']['lat']
+            longitude = detail_result['geometry']['location']['lng']
+            return Location(formatted_address, (latitude, longitude), detail_result)
+        else:
+            return None
 
     # for getting only autocomplete endpoint results
     def autocomplete(self,
