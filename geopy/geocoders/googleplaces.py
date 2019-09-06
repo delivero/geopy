@@ -175,8 +175,10 @@ class GooglePlaces(Geocoder):  # pylint: disable=R0902
         return details_page.get('result')
 
     # for getting only details about a specific place
-    def place_details(self, placeid, language=None, timeout=None):
-        detail_params = {}
+    def place_details(self, placeid, language=None, timeout=None, detail_params=None):
+        if detail_params is None:
+            detail_params = {}
+
         detail_params['key'] = self.api_key
         if not placeid:
             return []
